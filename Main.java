@@ -164,4 +164,30 @@ public class Main {
             }
         }
     }
+
+    private static void UpdateSal(Connection connect, Scanner scan) {
+        System.out.println("entr Employee id: ");
+        int id = scan.nextInt();
+        scan.nextLine();
+        System.out.println("Enter new basic salary:");
+        double new_basic_salary = scan.nextDouble();
+        scan.nextLine();
+        System.out.println("Enter new allowance:");
+        double new_allowance = scan.nextDouble();
+        scan.nextLine();
+        System.out.println("Enter new deduction:");
+        double new_deduction = scan.nextDouble();
+        scan.nextLine();
+        String Update = "update EMPLOYEES set Emp_Basic_Salary = ?, Emp_Allowance = ?, Emp_Deduction = ? where Emp_id = ?";
+        try (PreparedStatement pstmt = connect.prepareStatement(Update)) {
+            pstmt.setDouble(1, new_basic_salary);
+            pstmt.setDouble(2, new_allowance);
+            pstmt.setDouble(3, new_deduction);
+            pstmt.setDouble(4, id);
+            pstmt.executeUpdate();
+            System.out.println("Salary Updated Successfully...");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
