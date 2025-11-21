@@ -22,7 +22,7 @@ public class Main {
             }
             Boolean status = true;
             while (status) {
-                System.out.println(" EMPLOYEES STATUS ");
+                System.out.println(" \nEMPLOYEES STATUS ");
                 System.out.println("(i)   Add new Employee ");
                 System.out.println("(ii)  Check existing employee details ");
                 System.out.println("(iii) payroll ");
@@ -185,7 +185,7 @@ public class Main {
             pstmt.setDouble(1, new_basic_salary);
             pstmt.setDouble(2, new_allowance);
             pstmt.setDouble(3, new_deduction);
-            pstmt.setDouble(4, id);
+            pstmt.setInt(4, id);
             pstmt.executeUpdate();
             System.out.println("Salary Updated Successfully...");
         } catch (SQLException e) {
@@ -202,16 +202,20 @@ public class Main {
             pstmt.setInt(1, empid);
             ResultSet set = pstmt.executeQuery();
             if (set.next()) {
+                System.out.println("---------PAYROLL SLIP---------");
                 System.out.println("Employee name: " + set.getString("Emp_name"));
                 System.out.println("Position: " + set.getString("Emp_position"));
                 double basic_salary = set.getDouble("Emp_basic_salary");
                 double emp_allowance = set.getDouble("Emp_allowance");
                 double emp_deduction = set.getDouble("Emp_deduction");
                 double net_salary = basic_salary + emp_allowance - emp_deduction;
-                System.out.println("Basic Salary: " + basic_salary);
-                System.out.println("Allowance: " + emp_allowance);
-                System.out.println("Deduction: " + emp_deduction);
-                System.out.println("Net Salary: " + net_salary);
+                System.out.println("--------------------------------");
+                System.out.printf("Basic Salary: %.2f%n", basic_salary);
+                System.out.printf("Allowance: %.2f%n", emp_allowance);
+                System.out.printf("Deduction: %.2f%n", emp_deduction);
+                System.out.println("--------------------------------");
+                System.out.printf("Net Salary: %.2f%n", net_salary);
+                System.out.println("--------------------------------");
             } else {
                 System.out.println("No Record Found...");
             }
