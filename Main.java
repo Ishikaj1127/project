@@ -4,9 +4,9 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
-        String Url = "jdbc:mysql://localhost:3306/database2";
-        String Username = "aashi";
-        String Password = "aashi@123";
+        String Url = "jdbc:mysql://localhost:3306/mydb";
+        String Username = "alpha";
+        String Password = "alpha123";
         try (Connection connect = DriverManager.getConnection(Url, Username, Password)) {
             System.out.println("Connection build SUCCESSFULLY!..");
             String Employees = "Create table if not exists EMPLOYEES (" +
@@ -41,9 +41,11 @@ public class Main {
                         ExistingEmployee(connect, scan);
                         break;
 
-                    case "iii":
-                        Payroll(connect, scan);
-                        break;
+                    /*
+                     * case "iii":
+                     * Payroll(connect, scan);
+                     * break;
+                     */
 
                     case "iv":
                         UpdateSal(connect, scan);
@@ -166,7 +168,7 @@ public class Main {
     }
 
     private static void UpdateSal(Connection connect, Scanner scan) {
-        System.out.println("entr Employee id: ");
+        System.out.println("Enter Employee id: ");
         int id = scan.nextInt();
         scan.nextLine();
         System.out.println("Enter new basic salary:");
@@ -186,6 +188,33 @@ public class Main {
             pstmt.setDouble(4, id);
             pstmt.executeUpdate();
             System.out.println("Salary Updated Successfully...");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void GenerateSlip(Connection connect, Scanner scan) {
+        System.out.println("Enter Employee id: ");
+        int empid = scan.nextInt();
+        scan.nextLine();
+        String sql = "select Emp_name, Emp_position, Emp_basic_salary, Emp_allowance, Emp_deduction from EMPLOYEES where Emp_id = ?";
+        try (PreparedStatement pstmt = connect.prepareStatement(sql)) {
+            pstmt.setInt(1, empid);
+            ResultSet set = pstmt.executeQuery();
+            if (set.next()) {
+                System.out.println("Employee name: " + set.getString("Emp_name"));
+                System.out.println("Position: " + set.getString("Emp_position"));
+                double basic_salary = set.getDouble("Emp_basic_salary");
+                double emp_allowance = set.getDouble("Emp_allowance");
+                double emp_deduction = set.getDouble("Emp_deduction");
+                double net_salary = basic_salary + emp_allowance - emp_deduction;
+                System.out.println("Basic Salary: " + basic_salary);
+                System.out.println("Allowance: " + emp_allowance);
+                System.out.println("Deduction: " + emp_deduction);
+                System.out.println("Net Salary: " + net_salary);
+            } else {
+                System.out.println("No Record Found...");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
